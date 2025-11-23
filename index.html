@@ -4,53 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Physics Master Challenge</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- ใช้ฟอนต์ Kanit ให้ดูทันสมัยและสนุก -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4facfe;
-            --secondary-color: #00f2fe;
-            --accent-color: #ff0080;
-            --glass-bg: rgba(255, 255, 255, 0.95);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --text-color: #2d3436;
+            --primary-color: #00f2ea;
+            --secondary-color: #ff0050;
+            --bg-dark: #0f0c29;
+            --glass-bg: rgba(16, 18, 27, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-color: #ffffff;
+            --card-glow: 0 0 20px rgba(0, 242, 234, 0.1);
         }
 
         body {
-            font-family: 'Sarabun', sans-serif;
+            font-family: 'Kanit', sans-serif;
             margin: 0;
             padding: 0;
             height: 100vh;
             color: var(--text-color);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            position: relative;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Animated Background Particles */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            animation: floatOrb 10s infinite alternate;
+        }
+        .orb-1 { width: 300px; height: 300px; background: var(--secondary-color); top: -50px; left: -50px; opacity: 0.4; }
+        .orb-2 { width: 400px; height: 400px; background: var(--primary-color); bottom: -100px; right: -100px; opacity: 0.3; animation-delay: -5s; }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
         }
 
-        /* Container & Glass Effect */
+        /* Main Container */
         .container {
             width: 95%;
             max-width: 900px;
             height: 90vh;
             background: var(--glass-bg);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
+            z-index: 10;
         }
 
-        /* Screens */
+        /* Screens Transition */
         .screen {
             flex: 1;
             padding: 20px;
@@ -62,79 +77,89 @@
             overflow-y: auto;
             width: 100%;
             box-sizing: border-box;
-            animation: fadeIn 0.4s ease;
+            animation: slideUp 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
         
-        .screen.active {
-            display: flex;
-        }
+        .screen.active { display: flex; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         /* Typography */
         h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 800;
-            margin-bottom: 10px;
-            background: -webkit-linear-gradient(45deg, #0984e3, #d63031);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #00f2ea, #ff0050);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 242, 234, 0.5);
+            letter-spacing: 2px;
         }
 
-        .subtitle { font-size: 1.1rem; color: #636e72; margin-bottom: 30px; }
+        .subtitle { font-size: 1.2rem; color: #a0a0a0; margin-bottom: 40px; font-weight: 300; }
 
-        /* Inputs & Buttons */
+        /* Inputs */
         input[type="text"], input[type="number"] {
             width: 100%;
             max-width: 350px;
-            padding: 12px 20px;
+            padding: 15px 25px;
             border-radius: 50px;
-            border: 2px solid #dfe6e9;
-            font-size: 1.1rem;
+            border: 2px solid rgba(255,255,255,0.1);
+            font-size: 1.2rem;
             text-align: center;
             outline: none;
-            transition: all 0.3s;
-            font-family: 'Sarabun', sans-serif;
-            background: rgba(255, 255, 255, 0.8);
-            margin-bottom: 15px;
+            transition: 0.3s;
+            font-family: 'Kanit', sans-serif;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            margin-bottom: 20px;
         }
 
         input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+            box-shadow: 0 0 20px rgba(0, 242, 234, 0.4);
+            transform: scale(1.02);
         }
 
+        /* Buttons */
         .btn {
-            padding: 12px 30px;
+            padding: 12px 35px;
             border-radius: 50px;
             border: none;
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 1.2rem;
+            font-weight: 800;
             cursor: pointer;
-            transition: all 0.2s;
-            margin: 5px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn:active { transform: scale(0.95); }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+        .btn:active { transform: translateY(1px); }
 
         .btn-primary {
-            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
-            color: white;
+            background: linear-gradient(45deg, #00f2ea, #00c6ff);
+            color: #000;
+            box-shadow: 0 5px 20px rgba(0, 242, 234, 0.4);
         }
         
         .btn-danger {
-            background: linear-gradient(to right, #eb3349, #f45c43);
-            color: white;
+            background: linear-gradient(45deg, #ff0050, #ff0080);
+            color: #fff;
+            box-shadow: 0 5px 20px rgba(255, 0, 80, 0.4);
         }
 
         .btn-secondary {
-            background: white;
-            color: #636e72;
-            border: 2px solid #dfe6e9;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Top Bar */
@@ -143,151 +168,165 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 25px;
-            background: rgba(255, 255, 255, 0.8);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 20px 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             box-sizing: border-box;
-            z-index: 10;
+            z-index: 20;
         }
 
         .timer-box {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #d63031;
-            background: #fff;
-            padding: 5px 15px;
-            border-radius: 20px;
-            border: 1px solid #fab1a0;
-            display: flex;
-            align-items: center;
-            min-width: 80px;
-            justify-content: center;
-        }
-        
-        .finish-icon-btn {
-            cursor: pointer;
-            font-size: 1.5rem;
-            padding: 5px 10px;
-            border-radius: 10px;
-            background: #ffeaa7;
-            margin-left: 10px;
-            border: none;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            background: rgba(255, 0, 80, 0.2);
+            padding: 8px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 0, 80, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 80, 0.3);
+            display: flex; align-items: center; gap: 8px;
         }
 
-        /* Question Area */
+        .finish-icon-btn {
+            background: #ffb700;
+            color: #000;
+            border: none;
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: 0.3s;
+        }
+        .finish-icon-btn:hover { transform: scale(1.1) rotate(10deg); }
+
+        /* Progress Bar */
         .progress-bar-container {
-            width: 100%;
-            height: 6px;
-            background: #dfe6e9;
-            position: absolute;
-            top: 0; left: 0;
+            width: 100%; height: 4px; background: rgba(255,255,255,0.1);
+            position: absolute; top: 0; left: 0;
         }
         .progress-bar-fill {
-            height: 100%;
-            background: #00cec9;
-            width: 0%;
-            transition: width 0.3s;
+            height: 100%; background: var(--primary-color);
+            width: 0%; transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 10px var(--primary-color);
         }
 
+        /* Question Card */
         .question-card {
-            background: white;
-            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            width: 90%;
-            max-width: 700px;
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%; max-width: 700px;
+            margin-top: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
         }
 
         .question-badge {
-            padding: 5px 15px;
-            border-radius: 15px;
+            padding: 6px 18px;
+            border-radius: 20px;
             font-size: 0.9rem;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .badge-easy { background: #eafaf1; color: #27ae60; }
-        .badge-medium { background: #fef5e7; color: #d35400; }
-        .badge-hard { background: #fdedec; color: #c0392b; }
+        .badge-easy { background: rgba(0, 242, 234, 0.2); color: #00f2ea; border: 1px solid #00f2ea; }
+        .badge-medium { background: rgba(255, 183, 0, 0.2); color: #ffb700; border: 1px solid #ffb700; }
+        .badge-hard { background: rgba(255, 0, 80, 0.2); color: #ff0050; border: 1px solid #ff0050; }
 
         .question-text {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: 600;
-            margin-bottom: 25px;
-            line-height: 1.5;
-            color: #2d3436;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: #fff;
         }
 
         .input-area {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; width: 100%;
         }
+        .unit-label { font-weight: 600; color: #aaa; font-size: 1.2rem; }
 
         .nav-buttons {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            margin-top: 15px;
-            gap: 10px;
+            display: flex; justify-content: center; width: 100%; margin-top: 25px; gap: 15px;
         }
 
-        /* Modal Styles (Custom Confirm) */
+        /* Modal */
         .modal-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.8);
             display: none; justify-content: center; align-items: center;
             z-index: 1000;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
         }
         .modal-content {
-            background: white; padding: 30px; border-radius: 20px;
-            text-align: center; width: 90%; max-width: 400px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            background: #1a1a2e;
+            padding: 40px; border-radius: 24px;
+            text-align: center; width: 90%; max-width: 450px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 50px rgba(0, 242, 234, 0.2);
             animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #fff;
         }
         @keyframes popIn {
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
 
-        /* Analysis Grid */
+        /* Analysis & Score */
+        .score-circle {
+            width: 160px; height: 160px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,242,234,0.1) 0%, rgba(0,0,0,0) 70%);
+            border: 4px double #00f2ea;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            font-size: 4rem; font-weight: 800; color: #fff;
+            margin: 20px auto;
+            text-shadow: 0 0 20px #00f2ea;
+            box-shadow: 0 0 30px rgba(0, 242, 234, 0.2);
+            animation: pulseScore 2s infinite;
+        }
+        
+        @keyframes pulseScore {
+            0% { box-shadow: 0 0 30px rgba(0, 242, 234, 0.2); }
+            50% { box-shadow: 0 0 60px rgba(0, 242, 234, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(0, 242, 234, 0.2); }
+        }
+
         .analysis-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            width: 100%;
-            margin-top: 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; width: 100%; margin-top: 20px;
         }
         .analysis-card {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: left;
-            border: 1px solid #eee;
+            background: rgba(255,255,255,0.03);
+            padding: 20px; border-radius: 16px; text-align: left;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
         }
-        .stat-bar-bg { height: 8px; background: #dfe6e9; border-radius: 4px; overflow: hidden; margin-top:5px;}
-        .stat-bar-fill { height: 100%; background: #0984e3; border-radius: 4px; }
+        .analysis-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-5px); }
+
+        .stat-bar-bg { height: 10px; background: rgba(0,0,0,0.3); border-radius: 5px; overflow: hidden; margin-top: 10px; }
+        .stat-bar-fill { height: 100%; border-radius: 5px; box-shadow: 0 0 10px currentColor; }
         
-        .score-circle {
-            width: 120px; height: 120px;
-            border-radius: 50%;
-            border: 6px solid #00cec9;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 2.5rem; font-weight: bold; color: #00cec9;
-            margin: 10px auto;
+        .advice-text {
+            font-size: 0.85rem; color: #ddd; margin-top: 10px; 
+            background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px;
+            border-left: 3px solid #ccc;
+        }
+
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99;
         }
 
         @media (max-width: 600px) {
-            h1 { font-size: 1.8rem; }
-            .question-text { font-size: 1.1rem; }
-            .top-bar { padding: 10px; }
+            h1 { font-size: 2rem; }
+            .question-text { font-size: 1.2rem; }
+            .top-bar { padding: 15px; }
+            .timer-box { font-size: 1.1rem; padding: 5px 15px; }
             .btn { width: 100%; margin: 5px 0; }
             .nav-buttons { flex-direction: column-reverse; }
         }
@@ -295,23 +334,28 @@
 </head>
 <body>
 
-<!-- Custom Modal for Confirmation -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- Confetti Canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Custom Modal -->
 <div id="confirmModal" class="modal-overlay">
     <div class="modal-content">
-        <h2 style="margin-top:0;">ยืนยันการส่งคำตอบ?</h2>
-        <p>คุณต้องการจบการทำข้อสอบและดูคะแนนเลยหรือไม่</p>
-        <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
-            <button class="btn btn-secondary" onclick="closeModal()">ยังไม่ส่ง</button>
-            <button class="btn btn-danger" onclick="confirmFinish()">ส่งคำตอบ</button>
+        <h2 style="margin-top:0; color:#00f2ea;">⚡ ยืนยันการส่งคำตอบ?</h2>
+        <p style="color:#ccc;">เมื่อส่งแล้วจะไม่สามารถแก้ไขได้อีก แน่ใจนะครับ?</p>
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:30px;">
+            <button class="btn btn-secondary" onclick="closeModal()">กลับไปตรวจทาน</button>
+            <button class="btn btn-danger" onclick="confirmFinish()">🚀 ส่งคำตอบเลย!</button>
         </div>
     </div>
 </div>
 
-<!-- Custom Modal for Time Up -->
 <div id="timeUpModal" class="modal-overlay">
     <div class="modal-content">
-        <h2 style="color:#d63031; margin-top:0;">หมดเวลา!</h2>
-        <p>ระบบกำลังรวบรวมคะแนนของคุณ...</p>
+        <h2 style="color:#ff0050; margin-top:0; font-size:2.5rem;">หมดเวลา!</h2>
+        <p>การสอบสิ้นสุดลงแล้ว ระบบกำลังประมวลผลคะแนน...</p>
         <button class="btn btn-primary" onclick="confirmFinish()">ดูผลคะแนน</button>
     </div>
 </div>
@@ -323,91 +367,92 @@
 
     <!-- 1. Start Screen -->
     <div id="start-screen" class="screen active">
-        <h1>PHYSICS MASTER</h1>
-        <div class="subtitle">ทดสอบกฎการอนุรักษ์พลังงานกล | 15 ข้อ | 30 นาที</div>
+        <div style="font-size:5rem; margin-bottom:-20px;">⚛️</div>
+        <h1>Physics Quest</h1>
+        <div class="subtitle">ภารกิจพิชิตกฎอนุรักษ์พลังงาน | 15 ด่าน | 30 นาที</div>
         
-        <div style="width: 100%; max-width: 400px;">
-            <label style="display:block; text-align:left; margin-bottom: 5px; font-weight:bold; color:#636e72;">ชื่อ-นามสกุล ผู้สอบ</label>
-            <input type="text" id="studentName" placeholder="กรอกชื่อของคุณ..." autocomplete="off">
-            <button class="btn btn-primary" style="width: 100%; margin-top:10px;" onclick="startQuiz()">เริ่มทำข้อสอบ</button>
+        <div style="width: 100%; max-width: 400px; position:relative;">
+            <label style="display:block; text-align:left; margin-bottom: 8px; font-weight:600; color:#00f2ea; letter-spacing:1px;">ชื่อผู้ท้าชิง (Player Name)</label>
+            <input type="text" id="studentName" placeholder="กรอกชื่อเท่ๆ ของคุณ..." autocomplete="off">
+            <button class="btn btn-primary" style="width: 100%; margin-top:10px;" onclick="startQuiz()">🎮 เริ่มทำภารกิจ</button>
         </div>
     </div>
 
     <!-- 2. Quiz Screen -->
-    <div id="quiz-screen" class="screen" style="justify-content: flex-start; padding-top: 60px;">
+    <div id="quiz-screen" class="screen" style="justify-content: flex-start; padding-top: 80px;">
         <div class="top-bar" style="position: absolute; top:0; left:0;">
-            <div style="font-weight:bold; font-size:0.9rem;">
-                👤 <span id="displayStudentName">Guest</span>
+            <div style="font-weight:600; font-size:1rem; color:#fff;">
+                👤 ผู้เล่น: <span id="displayStudentName" style="color:#00f2ea;">Guest</span>
             </div>
             <div style="display:flex; align-items:center;">
                 <div class="timer-box">
-                    ⏱ <span id="timer">30:00</span>
+                    ⏳ <span id="timer">30:00</span>
                 </div>
-                <!-- Quick Submit Button -->
                 <button class="finish-icon-btn" title="ส่งคำตอบทันที" onclick="requestSubmit()">🏁</button>
             </div>
         </div>
 
         <div class="question-card">
-            <div id="questionBadge" class="question-badge badge-easy">ระดับง่าย</div>
-            <div style="color:#b2bec3; font-size:0.9rem; margin-bottom:5px;">ข้อที่ <span id="currentQNum">1</span> / 15</div>
-            <div id="questionText" class="question-text">Loading...</div>
+            <div id="questionBadge" class="question-badge badge-easy">ระดับ: ง่าย</div>
+            <div style="color:#aaa; font-size:0.9rem; margin-bottom:5px; font-weight:300;">ข้อที่ <span id="currentQNum" style="color:#fff; font-weight:bold;">1</span> / 15</div>
+            <div id="questionText" class="question-text">Loading Data...</div>
             
             <div class="input-area">
-                <input type="number" id="answerInput" step="any" placeholder="คำตอบ" onkeydown="checkEnter(event)">
-                <span id="unitLabel" style="font-weight:bold; color:#636e72;">หน่วย</span>
+                <input type="number" id="answerInput" step="any" placeholder="ใส่ตัวเลขคำตอบ" onkeydown="checkEnter(event)">
+                <span id="unitLabel" class="unit-label">หน่วย</span>
             </div>
         </div>
 
         <div class="nav-buttons">
             <button id="btnPrev" class="btn btn-secondary" onclick="prevQuestion()" style="flex:1;">❮ ย้อนกลับ</button>
             <button id="btnNext" class="btn btn-primary" onclick="nextQuestion()" style="flex:1;">ถัดไป ❯</button>
-            <button id="btnSubmit" class="btn btn-danger" onclick="requestSubmit()" style="flex:1; display: none;">ส่งคำตอบ</button>
+            <button id="btnSubmit" class="btn btn-danger" onclick="requestSubmit()" style="flex:1; display: none;">🏆 ส่งคำตอบ</button>
         </div>
     </div>
 
     <!-- 3. Result Screen -->
     <div id="result-screen" class="screen">
-        <div style="width:100%; max-width:700px; padding-bottom:40px;">
-            <h2>สรุปผลการสอบ</h2>
-            <div id="resultStudentName" style="color:#636e72;"></div>
+        <div style="width:100%; max-width:750px; padding-bottom:40px;">
+            <h2 style="color:#fff; text-transform:uppercase; margin-bottom:5px;">ผลการปฏิบัติภารกิจ</h2>
+            <div id="resultStudentName" style="color:#aaa; margin-bottom:20px;"></div>
             
             <div class="score-circle">
-                <div><span id="finalScore">0</span><span style="font-size:1.2rem; color:#b2bec3;">/15</span></div>
+                <div style="font-size:1rem; color:#00f2ea; margin-bottom:-10px;">คะแนนรวม</div>
+                <div><span id="finalScore">0</span><span style="font-size:1.5rem; color:#aaa;">/15</span></div>
             </div>
             
-            <div id="passFailMsg" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 20px;"></div>
+            <div id="passFailMsg" style="font-size: 1.5rem; font-weight: 800; margin-bottom: 30px;"></div>
 
-            <h3>การวิเคราะห์ผล</h3>
+            <h3 style="text-align:left; color:#00f2ea; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">📊 วิเคราะห์จุดแข็ง-จุดอ่อน</h3>
             <div class="analysis-grid" id="analysisGrid"></div>
 
-            <button class="btn btn-secondary" onclick="location.reload()" style="margin-top: 30px; width:100%;">ทำข้อสอบชุดใหม่</button>
+            <button class="btn btn-secondary" onclick="location.reload()" style="margin-top: 40px; width:100%;">🔄 เริ่มภารกิจใหม่</button>
         </div>
     </div>
 
 </div>
 
 <script>
-    // --- Database ---
+    // --- Data ---
     const poolQuestions = [
         // Easy
-        { level: "Easy", text: "ออกแรงคงที่ 50 นิวตัน ผลักวัตถุให้เคลื่อนที่ไปตามแนวแรงได้ระยะทาง 10 เมตร จงหางานที่ทำได้ (จูล)", answer: 500, unit: "J" },
-        { level: "Easy", text: "วัตถุมวล 2 kg เคลื่อนที่ด้วยความเร็ว 10 m/s จงหาพลังงานจลน์ (จูล)", answer: 100, unit: "J" },
-        { level: "Easy", text: "วัตถุมวล 10 kg อยู่สูงจากพื้น 5 เมตร จงหาพลังงานศักย์โน้มถ่วง (จูล)", answer: 500, unit: "J" },
-        { level: "Easy", text: "วัตถุตกลงมาจากตึกสูง 20 เมตร กระทบพื้นด้วยความเร็วเท่าใด (m/s)", answer: 20, unit: "m/s" },
-        { level: "Easy", text: "แกว่งลูกตุ้มจากความสูง 0.8 เมตร (เทียบกับจุดต่ำสุด) ความเร็วที่จุดต่ำสุดเป็นเท่าใด (m/s)", answer: 4, unit: "m/s" },
+        { level: "Easy", text: "ออกแรงคงที่ 50 นิวตัน ผลักวัตถุให้เคลื่อนที่ไปตามแนวแรงได้ระยะทาง 10 เมตร จงหางานที่ทำได้", answer: 500, unit: "J" },
+        { level: "Easy", text: "วัตถุมวล 2 kg เคลื่อนที่ด้วยความเร็ว 10 m/s จงหาพลังงานจลน์", answer: 100, unit: "J" },
+        { level: "Easy", text: "วัตถุมวล 10 kg อยู่สูงจากพื้น 5 เมตร จงหาพลังงานศักย์โน้มถ่วง", answer: 500, unit: "J" },
+        { level: "Easy", text: "วัตถุตกลงมาจากตึกสูง 20 เมตร กระทบพื้นด้วยความเร็วเท่าใด", answer: 20, unit: "m/s" },
+        { level: "Easy", text: "แกว่งลูกตุ้มจากความสูง 0.8 เมตร (เทียบกับจุดต่ำสุด) ความเร็วที่จุดต่ำสุดเป็นเท่าใด", answer: 4, unit: "m/s" },
         { level: "Easy", text: "โยนวัตถุขึ้นด้วยความเร็วต้น 30 m/s วัตถุจะขึ้นไปได้สูงสุดกี่เมตร", answer: 45, unit: "m" },
-        { level: "Easy", text: "วัตถุไถลลงจากพื้นเอียงลื่นสูง 5 เมตร ความเร็วที่ปลายพื้นเอียงเป็นเท่าใด (m/s)", answer: 10, unit: "m/s" },
+        { level: "Easy", text: "วัตถุไถลลงจากพื้นเอียงลื่นสูง 5 เมตร ความเร็วที่ปลายพื้นเอียงเป็นเท่าใด", answer: 10, unit: "m/s" },
         // Medium
         { level: "Medium", text: "รถไฟเหาะมวล 500 kg เคลื่อนที่จากจุด A สูง 25 เมตร ลงมายังจุด B สูง 5 เมตร ความเร็วที่จุด B เป็นเท่าใด (เริ่มนิ่งที่ A)", answer: 20, unit: "m/s" },
         { level: "Medium", text: "สปริง (k=800 N/m) ถูกกดหด 0.1 m เมื่อปล่อยจะดีดมวล 2 kg ออกไปด้วยความเร็วเท่าใด", answer: 2, unit: "m/s" },
-        { level: "Medium", text: "รถยนต์มวล 1,000 kg วิ่ง 20 m/s เบรกจนหยุดใน 100 เมตร จงหาขนาดแรงต้านเฉลี่ย (นิวตัน)", answer: 2000, unit: "N" },
-        { level: "Medium", text: "กล่องมวล 5 kg ไถลลงจากเนินสูง 4 เมตร ไปตามพื้นเอียงยาว 10 เมตร แล้วหยุดพอดี จงหาแรงเสียดทาน (นิวตัน)", answer: 20, unit: "N" },
+        { level: "Medium", text: "รถยนต์มวล 1,000 kg วิ่ง 20 m/s เบรกจนหยุดใน 100 เมตร จงหาขนาดแรงต้านเฉลี่ย", answer: 2000, unit: "N" },
+        { level: "Medium", text: "กล่องมวล 5 kg ไถลลงจากเนินสูง 4 เมตร ไปตามพื้นเอียงยาว 10 เมตร แล้วหยุดพอดี จงหาแรงเสียดทาน", answer: 20, unit: "N" },
         { level: "Medium", text: "วัตถุมวล 4 kg เคลื่อนที่ 5 m/s เข้าชนสปริง (k=400 N/m) สปริงจะหดตัวกี่เมตร", answer: 0.5, unit: "m" },
         // Hard
-        { level: "Hard", text: "กดสปริงหดลง 0.2 เมตร แล้วดีดมวล 0.5 kg ขึ้นไปในแนวดิ่งได้สูงสุด 4 เมตร จงหาค่า k ของสปริง (N/m)", answer: 1000, unit: "N/m" },
+        { level: "Hard", text: "กดสปริงหดลง 0.2 เมตร แล้วดีดมวล 0.5 kg ขึ้นไปในแนวดิ่งได้สูงสุด 4 เมตร จงหาค่า k ของสปริง", answer: 1000, unit: "N/m" },
         { level: "Hard", text: "บล็อก 2 kg อัดสปริง (k=1000) หด 0.2 m ปล่อยพุ่งขึ้นพื้นเอียงลื่นได้สูงกี่เมตร (แนวดิ่ง)", answer: 1, unit: "m" },
-        { level: "Hard", text: "ขว้างวัตถุลงจากตึกสูง 25 เมตร ด้วยความเร็วต้น 20 m/s วัตถุจะกระทบพื้นด้วยความเร็วเท่าใด (m/s)", answer: 30, unit: "m/s" }
+        { level: "Hard", text: "ขว้างวัตถุลงจากตึกสูง 25 เมตร ด้วยความเร็วต้น 20 m/s วัตถุจะกระทบพื้นด้วยความเร็วเท่าใด", answer: 30, unit: "m/s" }
     ];
 
     // --- State ---
@@ -415,7 +460,7 @@
     let userAnswers = [];
     let currentQIndex = 0;
     let timerInterval;
-    let timeRemaining = 30 * 60;
+    let timeRemaining = 30 * 60; 
 
     // --- Core Logic ---
     function shuffleArray(array) {
@@ -429,15 +474,19 @@
     function startQuiz() {
         const name = document.getElementById('studentName').value.trim();
         if(!name) {
-            // Use simple alert just for initial validation if needed, or simple focus
-            document.getElementById('studentName').style.borderColor = "red";
-            document.getElementById('studentName').focus();
+            const input = document.getElementById('studentName');
+            input.style.borderColor = "#ff0050";
+            input.style.boxShadow = "0 0 20px #ff0050";
+            setTimeout(() => {
+                input.style.borderColor = "rgba(255,255,255,0.1)";
+                input.style.boxShadow = "none";
+            }, 1000);
+            input.focus();
             return;
         }
 
         document.getElementById('displayStudentName').innerText = name;
         
-        // Prepare questions
         const easyQ = shuffleArray(poolQuestions.filter(q => q.level === 'Easy'));
         const mediumQ = shuffleArray(poolQuestions.filter(q => q.level === 'Medium'));
         const hardQ = shuffleArray(poolQuestions.filter(q => q.level === 'Hard'));
@@ -445,7 +494,6 @@
         quizQuestions = [...easyQ, ...mediumQ, ...hardQ];
         userAnswers = new Array(quizQuestions.length).fill(null);
 
-        // UI Transition
         document.getElementById('start-screen').classList.remove('active');
         document.getElementById('quiz-screen').classList.add('active');
 
@@ -459,7 +507,6 @@
         timerInterval = setInterval(() => {
             timeRemaining--;
             updateTimerDisplay();
-            
             if(timeRemaining <= 0) {
                 clearInterval(timerInterval);
                 document.getElementById('timeUpModal').style.display = 'flex';
@@ -474,32 +521,29 @@
         const timerEl = document.getElementById('timer');
         timerEl.innerText = display;
         
-        // Progress bar global
-        const percent = ((30*60 - timeRemaining) / (30*60)) * 100;
-        // Optional: animate global background or similar
+        if(timeRemaining < 60) {
+            timerEl.style.color = '#ff0050';
+            timerEl.style.textShadow = '0 0 10px #ff0050';
+        }
     }
 
-    // --- Rendering ---
     function renderQuestion() {
         const q = quizQuestions[currentQIndex];
         
-        // Badge
         const badge = document.getElementById('questionBadge');
         badge.className = 'question-badge';
-        if(q.level === 'Easy') { badge.classList.add('badge-easy'); badge.innerText = "ระดับ: ง่าย"; }
-        else if(q.level === 'Medium') { badge.classList.add('badge-medium'); badge.innerText = "ระดับ: ปานกลาง"; }
-        else { badge.classList.add('badge-hard'); badge.innerText = "ระดับ: ยาก"; }
+        if(q.level === 'Easy') { badge.classList.add('badge-easy'); badge.innerText = "⭐ ระดับ: ง่าย"; }
+        else if(q.level === 'Medium') { badge.classList.add('badge-medium'); badge.innerText = "⭐⭐ ระดับ: ปานกลาง"; }
+        else { badge.classList.add('badge-hard'); badge.innerText = "⭐⭐⭐ ระดับ: ยาก"; }
 
         document.getElementById('currentQNum').innerText = currentQIndex + 1;
         document.getElementById('questionText').innerText = q.text;
         document.getElementById('unitLabel').innerText = q.unit;
 
-        // Input
         const input = document.getElementById('answerInput');
         input.value = userAnswers[currentQIndex] !== null ? userAnswers[currentQIndex] : '';
         input.focus();
 
-        // Buttons
         document.getElementById('btnPrev').style.visibility = currentQIndex === 0 ? 'hidden' : 'visible';
         
         if (currentQIndex === quizQuestions.length - 1) {
@@ -510,7 +554,6 @@
             document.getElementById('btnSubmit').style.display = 'none';
         }
 
-        // Top Progress Bar
         const progress = ((currentQIndex + 1) / quizQuestions.length) * 100;
         document.getElementById('globalProgress').style.width = `${progress}%`;
     }
@@ -550,10 +593,8 @@
         }
     }
 
-    // --- Modal & Submit Logic ---
     function requestSubmit() {
         saveCurrentAnswer();
-        // Show custom modal
         document.getElementById('confirmModal').style.display = 'flex';
     }
 
@@ -568,22 +609,24 @@
         
         calculateResults();
         
-        // Switch Screen
         document.getElementById('quiz-screen').classList.remove('active');
         document.getElementById('result-screen').classList.add('active');
+        
+        // Trigger Confetti
+        fireConfetti();
     }
 
     function calculateResults() {
         let score = 0;
+        // ปรับเปลี่ยน Label เป็นภาษาไทย และเพิ่มข้อความแนะนำ (advice)
         let stats = {
-            Easy: { total: 0, correct: 0, label: "ง่าย" },
-            Medium: { total: 0, correct: 0, label: "ปานกลาง" },
-            Hard: { total: 0, correct: 0, label: "ยาก" }
+            Easy: { total: 0, correct: 0, label: "ภารกิจระดับง่าย", color: "#00f2ea" },
+            Medium: { total: 0, correct: 0, label: "ภารกิจระดับกลาง", color: "#ffb700" },
+            Hard: { total: 0, correct: 0, label: "ภารกิจระดับยาก", color: "#ff0050" }
         };
 
         quizQuestions.forEach((q, i) => {
             const userAns = userAnswers[i];
-            // Check correctness (tolerance 0.01)
             const isCorrect = userAns !== null && Math.abs(userAns - q.answer) < 0.01;
             
             stats[q.level].total++;
@@ -593,38 +636,116 @@
             }
         });
 
-        document.getElementById('resultStudentName').innerText = "ผู้สอบ: " + document.getElementById('studentName').value;
-        document.getElementById('finalScore').innerText = score;
+        document.getElementById('resultStudentName').innerText = "ผู้เล่น: " + document.getElementById('studentName').value;
+        const scoreEl = document.getElementById('finalScore');
+        scoreEl.innerText = score;
+        
+        if(score >= 12) scoreEl.style.color = "#00f2ea";
+        else if(score >= 8) scoreEl.style.color = "#ffb700";
+        else scoreEl.style.color = "#ff0050";
 
-        // Feedback
+        // Rank Feedback
         const msgDiv = document.getElementById('passFailMsg');
         const percentage = (score / quizQuestions.length) * 100;
         if(percentage >= 80) {
-            msgDiv.innerHTML = "<span style='color:#00b894'>🌟 ระดับปรมาจารย์ (Master)</span>";
+            msgDiv.innerHTML = "<span style='color:#00f2ea; text-shadow:0 0 20px #00f2ea;'>👑 ระดับ: เทพเจ้าฟิสิกส์</span>";
         } else if (percentage >= 50) {
-            msgDiv.innerHTML = "<span style='color:#fdcb6e'>👍 ผ่านเกณฑ์ (Passed)</span>";
+            msgDiv.innerHTML = "<span style='color:#ffb700; text-shadow:0 0 20px #ffb700;'>⚡ ระดับ: เซียนฟิสิกส์</span>";
         } else {
-            msgDiv.innerHTML = "<span style='color:#d63031'>💪 พยายามอีกนิด (Keep Trying)</span>";
+            msgDiv.innerHTML = "<span style='color:#ff0050; text-shadow:0 0 20px #ff0050;'>💀 ระดับ: มือใหม่หัดขับ</span>";
         }
 
-        // Analysis Grid
         const grid = document.getElementById('analysisGrid');
         let html = '';
         for (const level in stats) {
             const data = stats[level];
             const percent = data.total > 0 ? (data.correct / data.total) * 100 : 0;
-            let barColor = percent >= 80 ? '#00b894' : (percent >= 50 ? '#fdcb6e' : '#ff7675');
             
+            // Logic for Recommendation/Advice
+            let advice = "";
+            if(percent === 100) {
+                advice = "ยอดเยี่ยม! ไม่มีความผิดพลาดเลย";
+            } else if (percent >= 50) {
+                advice = "ทำได้ดี แต่ควรทบทวนจุดที่ผิดเล็กน้อย";
+            } else {
+                if(level === 'Easy') advice = "❗ ควรกลับไปทบทวนสูตรพื้นฐานด่วน!";
+                else if(level === 'Medium') advice = "⚠️ ลองฝึกโจทย์ที่มีการเปลี่ยนรูปพลังงานเพิ่มขึ้น";
+                else advice = "🔥 โจทย์ยากต้องฝึกบ่อยๆ อย่าเพิ่งท้อนะ!";
+            }
+
             html += `
             <div class="analysis-card">
-                <div style="font-weight:bold; color:#636e72;">ระดับ${data.label}</div>
-                <div style="font-size:0.9rem; margin-bottom:5px;">ได้ ${data.correct}/${data.total} คะแนน</div>
-                <div class="stat-bar-bg">
-                    <div class="stat-bar-fill" style="width:${percent}%; background-color:${barColor};"></div>
+                <div>
+                    <div style="font-weight:800; color:${data.color}; letter-spacing:1px;">${data.label}</div>
+                    <div style="font-size:0.9rem; margin-bottom:5px; color:#ccc;">ทำได้ถูกต้อง: ${data.correct}/${data.total} ข้อ</div>
+                    <div class="stat-bar-bg">
+                        <div class="stat-bar-fill" style="width:${percent}%; background-color:${data.color}; box-shadow: 0 0 10px ${data.color};"></div>
+                    </div>
+                </div>
+                <div class="advice-text" style="border-left-color:${data.color};">
+                    💡 ${advice}
                 </div>
             </div>`;
         }
         grid.innerHTML = html;
+    }
+
+    // --- Simple Confetti Logic (Vanilla JS) ---
+    function fireConfetti() {
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const pieces = [];
+        const numberOfPieces = 150;
+        const colors = ['#00f2ea', '#ff0050', '#ffb700', '#ffffff'];
+
+        for (let i = 0; i < numberOfPieces; i++) {
+            pieces.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                rotation: Math.random() * 360,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                size: Math.random() * 10 + 5,
+                speed: Math.random() * 5 + 2,
+                opacity: 1
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pieces.forEach((p, i) => {
+                ctx.globalAlpha = p.opacity;
+                ctx.fillStyle = p.color;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+
+                p.y += p.speed;
+                p.rotation += 2;
+
+                if (p.y > canvas.height) {
+                    p.y = -20; 
+                    if(Math.random() > 0.9) p.opacity = 0; // Fade out eventually
+                }
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+        
+        // Stop after 5 seconds to save performance
+        setTimeout(() => {
+            const clearId = setInterval(() => {
+                pieces.forEach(p => p.opacity -= 0.05);
+                if(pieces[0].opacity <= 0) {
+                    clearInterval(clearId);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }, 50);
+        }, 5000);
     }
 </script>
 
