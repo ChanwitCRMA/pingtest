@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Master Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4facfe;
+            --secondary-color: #00f2fe;
+            --accent-color: #ff0080;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --text-color: #2d3436;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Container & Glass Effect */
+        .container {
+            width: 95%;
+            max-width: 900px;
+            height: 90vh;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Screens */
+        .screen {
+            flex: 1;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: -webkit-linear-gradient(45deg, #0984e3, #d63031);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle { font-size: 1.1rem; color: #636e72; margin-bottom: 30px; }
+
+        /* Inputs & Buttons */
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            max-width: 350px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 2px solid #dfe6e9;
+            font-size: 1.1rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s;
+            font-family: 'Sarabun', sans-serif;
+            background: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:active { transform: scale(0.95); }
+
+        .btn-primary {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(to right, #eb3349, #f45c43);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #636e72;
+            border: 2px solid #dfe6e9;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .timer-box {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #d63031;
+            background: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid #fab1a0;
+            display: flex;
+            align-items: center;
+            min-width: 80px;
+            justify-content: center;
+        }
+        
+        .finish-icon-btn {
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 5px 10px;
+            border-radius: 10px;
+            background: #ffeaa7;
+            margin-left: 10px;
+            border: none;
+        }
+
+        /* Question Area */
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #dfe6e9;
+            position: absolute;
+            top: 0; left: 0;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: #00cec9;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .question-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            width: 90%;
+            max-width: 700px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .question-badge {
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .badge-easy { background: #eafaf1; color: #27ae60; }
+        .badge-medium { background: #fef5e7; color: #d35400; }
+        .badge-hard { background: #fdedec; color: #c0392b; }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            color: #2d3436;
+        }
+
+        .input-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        /* Modal Styles (Custom Confirm) */
+        .modal-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.5);
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 20px;
+            text-align: center; width: 90%; max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Analysis Grid */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .analysis-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: left;
+            border: 1px solid #eee;
+        }
+        .stat-bar-bg { height: 8px; background: #dfe6e9; border-radius: 4px; overflow: hidden; margin-top:5px;}
+        .stat-bar-fill { height: 100%; background: #0984e3; border-radius: 4px; }
+        
+        .score-circle {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            border: 6px solid #00cec9;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 2.5rem; font-weight: bold; color: #00cec9;
+            margin: 10px auto;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .question-text { font-size: 1.1rem; }
+            .top-bar { padding: 10px; }
+            .btn { width: 100%; margin: 5px 0; }
+            .nav-buttons { flex-direction: column-reverse; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Custom Modal for Confirmation -->
+<div id="confirmModal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 style="margin-top:0;">ยืนยันการส่งคำตอบ?</h2>
+        <p>คุณต้องการจบการทำข้อสอบและดูคะแนนเลยหรือไม่</p>
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
+            <button class="btn btn-secondary" onclick="closeModal()">ยังไม่ส่ง</button>
+            <button class="btn btn-danger" onclick="confirmFinish()">ส่งคำตอบ</button>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Modal for Time Up -->
+<div id="timeUpModal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 style="color:#d63031; margin-top:0;">หมดเวลา!</h2>
+        <p>ระบบกำลังรวบรวมคะแนนของคุณ...</p>
+        <button class="btn btn-primary" onclick="confirmFinish()">ดูผลคะแนน</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="progress-bar-container">
+        <div id="globalProgress" class="progress-bar-fill"></div>
+    </div>
+
+    <!-- 1. Start Screen -->
+    <div id="start-screen" class="screen active">
+        <h1>PHYSICS MASTER</h1>
+        <div class="subtitle">ทดสอบกฎการอนุรักษ์พลังงานกล | 15 ข้อ | 30 นาที</div>
+        
+        <div style="width: 100%; max-width: 400px;">
+            <label style="display:block; text-align:left; margin-bottom: 5px; font-weight:bold; color:#636e72;">ชื่อ-นามสกุล ผู้สอบ</label>
+            <input type="text" id="studentName" placeholder="กรอกชื่อของคุณ..." autocomplete="off">
+            <button class="btn btn-primary" style="width: 100%; margin-top:10px;" onclick="startQuiz()">เริ่มทำข้อสอบ</button>
+        </div>
+    </div>
+
+    <!-- 2. Quiz Screen -->
+    <div id="quiz-screen" class="screen" style="justify-content: flex-start; padding-top: 60px;">
+        <div class="top-bar" style="position: absolute; top:0; left:0;">
+            <div style="font-weight:bold; font-size:0.9rem;">
+                👤 <span id="displayStudentName">Guest</span>
+            </div>
+            <div style="display:flex; align-items:center;">
+                <div class="timer-box">
+                    ⏱ <span id="timer">30:00</span>
+                </div>
+                <!-- Quick Submit Button -->
+                <button class="finish-icon-btn" title="ส่งคำตอบทันที" onclick="requestSubmit()">🏁</button>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div id="questionBadge" class="question-badge badge-easy">ระดับง่าย</div>
+            <div style="color:#b2bec3; font-size:0.9rem; margin-bottom:5px;">ข้อที่ <span id="currentQNum">1</span> / 15</div>
+            <div id="questionText" class="question-text">Loading...</div>
+            
+            <div class="input-area">
+                <input type="number" id="answerInput" step="any" placeholder="คำตอบ" onkeydown="checkEnter(event)">
+                <span id="unitLabel" style="font-weight:bold; color:#636e72;">หน่วย</span>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button id="btnPrev" class="btn btn-secondary" onclick="prevQuestion()" style="flex:1;">❮ ย้อนกลับ</button>
+            <button id="btnNext" class="btn btn-primary" onclick="nextQuestion()" style="flex:1;">ถัดไป ❯</button>
+            <button id="btnSubmit" class="btn btn-danger" onclick="requestSubmit()" style="flex:1; display: none;">ส่งคำตอบ</button>
+        </div>
+    </div>
+
+    <!-- 3. Result Screen -->
+    <div id="result-screen" class="screen">
+        <div style="width:100%; max-width:700px; padding-bottom:40px;">
+            <h2>สรุปผลการสอบ</h2>
+            <div id="resultStudentName" style="color:#636e72;"></div>
+            
+            <div class="score-circle">
+                <div><span id="finalScore">0</span><span style="font-size:1.2rem; color:#b2bec3;">/15</span></div>
+            </div>
+            
+            <div id="passFailMsg" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 20px;"></div>
+
+            <h3>การวิเคราะห์ผล</h3>
+            <div class="analysis-grid" id="analysisGrid"></div>
+
+            <button class="btn btn-secondary" onclick="location.reload()" style="margin-top: 30px; width:100%;">ทำข้อสอบชุดใหม่</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- Database ---
+    const poolQuestions = [
+        // Easy
+        { level: "Easy", text: "ออกแรงคงที่ 50 นิวตัน ผลักวัตถุให้เคลื่อนที่ไปตามแนวแรงได้ระยะทาง 10 เมตร จงหางานที่ทำได้ (จูล)", answer: 500, unit: "J" },
+        { level: "Easy", text: "วัตถุมวล 2 kg เคลื่อนที่ด้วยความเร็ว 10 m/s จงหาพลังงานจลน์ (จูล)", answer: 100, unit: "J" },
+        { level: "Easy", text: "วัตถุมวล 10 kg อยู่สูงจากพื้น 5 เมตร จงหาพลังงานศักย์โน้มถ่วง (จูล)", answer: 500, unit: "J" },
+        { level: "Easy", text: "วัตถุตกลงมาจากตึกสูง 20 เมตร กระทบพื้นด้วยความเร็วเท่าใด (m/s)", answer: 20, unit: "m/s" },
+        { level: "Easy", text: "แกว่งลูกตุ้มจากความสูง 0.8 เมตร (เทียบกับจุดต่ำสุด) ความเร็วที่จุดต่ำสุดเป็นเท่าใด (m/s)", answer: 4, unit: "m/s" },
+        { level: "Easy", text: "โยนวัตถุขึ้นด้วยความเร็วต้น 30 m/s วัตถุจะขึ้นไปได้สูงสุดกี่เมตร", answer: 45, unit: "m" },
+        { level: "Easy", text: "วัตถุไถลลงจากพื้นเอียงลื่นสูง 5 เมตร ความเร็วที่ปลายพื้นเอียงเป็นเท่าใด (m/s)", answer: 10, unit: "m/s" },
+        // Medium
+        { level: "Medium", text: "รถไฟเหาะมวล 500 kg เคลื่อนที่จากจุด A สูง 25 เมตร ลงมายังจุด B สูง 5 เมตร ความเร็วที่จุด B เป็นเท่าใด (เริ่มนิ่งที่ A)", answer: 20, unit: "m/s" },
+        { level: "Medium", text: "สปริง (k=800 N/m) ถูกกดหด 0.1 m เมื่อปล่อยจะดีดมวล 2 kg ออกไปด้วยความเร็วเท่าใด", answer: 2, unit: "m/s" },
+        { level: "Medium", text: "รถยนต์มวล 1,000 kg วิ่ง 20 m/s เบรกจนหยุดใน 100 เมตร จงหาขนาดแรงต้านเฉลี่ย (นิวตัน)", answer: 2000, unit: "N" },
+        { level: "Medium", text: "กล่องมวล 5 kg ไถลลงจากเนินสูง 4 เมตร ไปตามพื้นเอียงยาว 10 เมตร แล้วหยุดพอดี จงหาแรงเสียดทาน (นิวตัน)", answer: 20, unit: "N" },
+        { level: "Medium", text: "วัตถุมวล 4 kg เคลื่อนที่ 5 m/s เข้าชนสปริง (k=400 N/m) สปริงจะหดตัวกี่เมตร", answer: 0.5, unit: "m" },
+        // Hard
+        { level: "Hard", text: "กดสปริงหดลง 0.2 เมตร แล้วดีดมวล 0.5 kg ขึ้นไปในแนวดิ่งได้สูงสุด 4 เมตร จงหาค่า k ของสปริง (N/m)", answer: 1000, unit: "N/m" },
+        { level: "Hard", text: "บล็อก 2 kg อัดสปริง (k=1000) หด 0.2 m ปล่อยพุ่งขึ้นพื้นเอียงลื่นได้สูงกี่เมตร (แนวดิ่ง)", answer: 1, unit: "m" },
+        { level: "Hard", text: "ขว้างวัตถุลงจากตึกสูง 25 เมตร ด้วยความเร็วต้น 20 m/s วัตถุจะกระทบพื้นด้วยความเร็วเท่าใด (m/s)", answer: 30, unit: "m/s" }
+    ];
+
+    // --- State ---
+    let quizQuestions = [];
+    let userAnswers = [];
+    let currentQIndex = 0;
+    let timerInterval;
+    let timeRemaining = 30 * 60;
+
+    // --- Core Logic ---
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function startQuiz() {
+        const name = document.getElementById('studentName').value.trim();
+        if(!name) {
+            // Use simple alert just for initial validation if needed, or simple focus
+            document.getElementById('studentName').style.borderColor = "red";
+            document.getElementById('studentName').focus();
+            return;
+        }
+
+        document.getElementById('displayStudentName').innerText = name;
+        
+        // Prepare questions
+        const easyQ = shuffleArray(poolQuestions.filter(q => q.level === 'Easy'));
+        const mediumQ = shuffleArray(poolQuestions.filter(q => q.level === 'Medium'));
+        const hardQ = shuffleArray(poolQuestions.filter(q => q.level === 'Hard'));
+        
+        quizQuestions = [...easyQ, ...mediumQ, ...hardQ];
+        userAnswers = new Array(quizQuestions.length).fill(null);
+
+        // UI Transition
+        document.getElementById('start-screen').classList.remove('active');
+        document.getElementById('quiz-screen').classList.add('active');
+
+        currentQIndex = 0;
+        renderQuestion();
+        startTimer();
+    }
+
+    function startTimer() {
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+            updateTimerDisplay();
+            
+            if(timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timeUpModal').style.display = 'flex';
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        const timerEl = document.getElementById('timer');
+        timerEl.innerText = display;
+        
+        // Progress bar global
+        const percent = ((30*60 - timeRemaining) / (30*60)) * 100;
+        // Optional: animate global background or similar
+    }
+
+    // --- Rendering ---
+    function renderQuestion() {
+        const q = quizQuestions[currentQIndex];
+        
+        // Badge
+        const badge = document.getElementById('questionBadge');
+        badge.className = 'question-badge';
+        if(q.level === 'Easy') { badge.classList.add('badge-easy'); badge.innerText = "ระดับ: ง่าย"; }
+        else if(q.level === 'Medium') { badge.classList.add('badge-medium'); badge.innerText = "ระดับ: ปานกลาง"; }
+        else { badge.classList.add('badge-hard'); badge.innerText = "ระดับ: ยาก"; }
+
+        document.getElementById('currentQNum').innerText = currentQIndex + 1;
+        document.getElementById('questionText').innerText = q.text;
+        document.getElementById('unitLabel').innerText = q.unit;
+
+        // Input
+        const input = document.getElementById('answerInput');
+        input.value = userAnswers[currentQIndex] !== null ? userAnswers[currentQIndex] : '';
+        input.focus();
+
+        // Buttons
+        document.getElementById('btnPrev').style.visibility = currentQIndex === 0 ? 'hidden' : 'visible';
+        
+        if (currentQIndex === quizQuestions.length - 1) {
+            document.getElementById('btnNext').style.display = 'none';
+            document.getElementById('btnSubmit').style.display = 'block';
+        } else {
+            document.getElementById('btnNext').style.display = 'block';
+            document.getElementById('btnSubmit').style.display = 'none';
+        }
+
+        // Top Progress Bar
+        const progress = ((currentQIndex + 1) / quizQuestions.length) * 100;
+        document.getElementById('globalProgress').style.width = `${progress}%`;
+    }
+
+    function saveCurrentAnswer() {
+        const input = document.getElementById('answerInput');
+        if(input.value !== '') {
+            userAnswers[currentQIndex] = parseFloat(input.value);
+        } else {
+            userAnswers[currentQIndex] = null;
+        }
+    }
+
+    function nextQuestion() {
+        saveCurrentAnswer();
+        if(currentQIndex < quizQuestions.length - 1) {
+            currentQIndex++;
+            renderQuestion();
+        }
+    }
+
+    function prevQuestion() {
+        saveCurrentAnswer();
+        if(currentQIndex > 0) {
+            currentQIndex--;
+            renderQuestion();
+        }
+    }
+
+    function checkEnter(e) {
+        if(e.key === 'Enter') {
+            if(currentQIndex < quizQuestions.length - 1) {
+                nextQuestion();
+            } else {
+                requestSubmit();
+            }
+        }
+    }
+
+    // --- Modal & Submit Logic ---
+    function requestSubmit() {
+        saveCurrentAnswer();
+        // Show custom modal
+        document.getElementById('confirmModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('confirmModal').style.display = 'none';
+    }
+
+    function confirmFinish() {
+        clearInterval(timerInterval);
+        document.getElementById('confirmModal').style.display = 'none';
+        document.getElementById('timeUpModal').style.display = 'none';
+        
+        calculateResults();
+        
+        // Switch Screen
+        document.getElementById('quiz-screen').classList.remove('active');
+        document.getElementById('result-screen').classList.add('active');
+    }
+
+    function calculateResults() {
+        let score = 0;
+        let stats = {
+            Easy: { total: 0, correct: 0, label: "ง่าย" },
+            Medium: { total: 0, correct: 0, label: "ปานกลาง" },
+            Hard: { total: 0, correct: 0, label: "ยาก" }
+        };
+
+        quizQuestions.forEach((q, i) => {
+            const userAns = userAnswers[i];
+            // Check correctness (tolerance 0.01)
+            const isCorrect = userAns !== null && Math.abs(userAns - q.answer) < 0.01;
+            
+            stats[q.level].total++;
+            if(isCorrect) {
+                score++;
+                stats[q.level].correct++;
+            }
+        });
+
+        document.getElementById('resultStudentName').innerText = "ผู้สอบ: " + document.getElementById('studentName').value;
+        document.getElementById('finalScore').innerText = score;
+
+        // Feedback
+        const msgDiv = document.getElementById('passFailMsg');
+        const percentage = (score / quizQuestions.length) * 100;
+        if(percentage >= 80) {
+            msgDiv.innerHTML = "<span style='color:#00b894'>🌟 ระดับปรมาจารย์ (Master)</span>";
+        } else if (percentage >= 50) {
+            msgDiv.innerHTML = "<span style='color:#fdcb6e'>👍 ผ่านเกณฑ์ (Passed)</span>";
+        } else {
+            msgDiv.innerHTML = "<span style='color:#d63031'>💪 พยายามอีกนิด (Keep Trying)</span>";
+        }
+
+        // Analysis Grid
+        const grid = document.getElementById('analysisGrid');
+        let html = '';
+        for (const level in stats) {
+            const data = stats[level];
+            const percent = data.total > 0 ? (data.correct / data.total) * 100 : 0;
+            let barColor = percent >= 80 ? '#00b894' : (percent >= 50 ? '#fdcb6e' : '#ff7675');
+            
+            html += `
+            <div class="analysis-card">
+                <div style="font-weight:bold; color:#636e72;">ระดับ${data.label}</div>
+                <div style="font-size:0.9rem; margin-bottom:5px;">ได้ ${data.correct}/${data.total} คะแนน</div>
+                <div class="stat-bar-bg">
+                    <div class="stat-bar-fill" style="width:${percent}%; background-color:${barColor};"></div>
+                </div>
+            </div>`;
+        }
+        grid.innerHTML = html;
+    }
+</script>
+
+</body>
+</html>
